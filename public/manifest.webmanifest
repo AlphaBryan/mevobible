@@ -1,0 +1,17 @@
+{
+  "name": "Lecture du vendredi",
+  "short_name": "Vendredi",
+  "description": "Étude biblique familiale du vendredi : Psaume 51 puis le chapitre du jour, lus à voix haute.",
+  "lang": "fr-CA",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f1f3f7",
+  "theme_color": "#2c3b88",
+  "icons": [
+    { "src": "/icone-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icone-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icone-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icone.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

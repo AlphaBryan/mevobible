@@ -1,0 +1,6 @@
+source-lsg/
+.venv/
+echantillons/
+scripts/.usage.json
+tests/
+reference-ui.html

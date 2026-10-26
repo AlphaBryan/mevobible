@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.vercel/
+source-lsg/
+*.log
+.DS_Store
+echantillons/
+scripts/.usage.json
+.venv/
+.env
+.vercel
+.env*

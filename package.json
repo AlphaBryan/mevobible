@@ -1,0 +1,25 @@
+{
+  "name": "lecture-du-vendredi",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "convertir": "node scripts/convertir-usfm.mjs",
+    "audio": "node scripts/generer-audio.mjs",
+    "installer-voix": "python3 -m venv .venv && .venv/bin/pip install -q edge-tts",
+    "test:navigateurs": "vite build && node tests/navigateurs.mjs",
+    "icones": "node scripts/icones.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.64.1",
+    "vite": "^6.4.5",
+    "vitest": "^3.2.7"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.8.2"
+  }
+}

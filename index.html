@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lecture du vendredi</title>
+<meta name="description" content="Étude biblique familiale du vendredi : Psaume 51 puis le chapitre du jour, lus à voix haute.">
+<meta name="theme-color" content="#f1f3f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#10131b" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icone.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icone-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Vendredi">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Cormorant+Garamond:wght@600;700&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+<link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <p class="eyebrow" id="dateLine">Vendredi</p>
+    <h1>Étude biblique du vendredi</h1>
+    <div class="journey" role="group" aria-label="Progression dans la Bible">
+      <div class="journey-bar"><span id="journeyFill" style="width:10%"></span></div>
+      <p id="journeyText">De Genèse 1 à Apocalypse 22</p>
+    </div>
+  </header>
+
+  <nav class="steps" aria-label="Étapes">
+    <button class="step" id="step-psaume" type="button" aria-current="step">
+      <span class="num">1</span>
+      <span class="txt"><span class="lbl">Prière d’ouverture</span><span class="ttl">Psaume 51</span></span>
+    </button>
+    <button class="step" id="step-lecture" type="button">
+      <span class="num">2</span>
+      <span class="txt"><span class="lbl">Lecture du jour</span><span class="ttl" id="stepLectureTitle">…</span></span>
+    </button>
+  </nav>
+
+  <main class="reader" id="reader">
+    <div class="reader-head">
+      <h2 id="readTitle">Psaume 51</h2>
+      <p class="meta"><span id="readMeta">21 versets · Louis Segond 1910</span><span class="secours" id="secoursBadge" hidden title="L’audio de ce chapitre n’est pas encore généré : la voix de l’appareil prend le relais.">Voix de secours</span></p>
+      <a class="yt" id="ytLink" href="https://www.youtube.com/results?search_query=psaume+51" target="_blank" rel="noopener">Ouvrir une vidéo du Psaume 51 sur YouTube ↗</a>
+    </div>
+    <p class="notice" id="notice" hidden></p>
+    <ol class="verses" id="verses"></ol>
+    <section class="finish" id="finish" aria-live="polite"></section>
+  </main>
+
+  <details class="settings" id="settings">
+    <summary>Réglages</summary>
+    <div class="set-body">
+      <div class="field">
+        <span class="flabel">Passage du jour</span>
+        <p class="hint">Si vous avez sauté une semaine ou lu un chapitre de plus, ajustez ici.</p>
+        <div class="inline">
+          <select class="book" id="setBook" aria-label="Livre"></select>
+          <select id="setChap" aria-label="Chapitre"></select>
+          <button class="btn btn-ghost" id="setPassageBtn" type="button">Enregistrer</button>
+          <span class="saved" id="setPassageMsg" role="status" hidden>Enregistré</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="setYt">Votre vidéo YouTube du Psaume 51 (facultatif)</label>
+        <p class="hint">Collez le lien de la vidéo que vous écoutez d’habitude. Un bouton l’ouvrira à l’étape 1.</p>
+        <div class="inline">
+          <input type="url" id="setYt" placeholder="https://www.youtube.com/watch?v=…">
+          <button class="btn btn-ghost" id="setYtBtn" type="button">Enregistrer</button>
+          <span class="saved" id="setYtMsg" role="status" hidden>Enregistré</span>
+        </div>
+      </div>
+      <div class="field" id="voiceField" hidden>
+        <label for="setVoice">Voix de lecture</label>
+        <select id="setVoice"></select>
+      </div>
+      <div class="field">
+        <span class="flabel">Taille du texte</span>
+        <div class="inline">
+          <button class="btn btn-ghost" id="sizeDown" type="button" aria-label="Texte plus petit">A−</button>
+          <button class="btn btn-ghost" id="sizeUp" type="button" aria-label="Texte plus grand">A+</button>
+        </div>
+      </div>
+      <p class="sync" id="syncLine"></p>
+    </div>
+  </details>
+
+  <p class="credit">Texte biblique : Louis Segond 1910 (domaine public). Lecture à voix haute par une voix neuronale enregistrée à l’avance.</p>
+</div>
+
+<div class="player" id="player">
+  <div class="player-in">
+    <button class="play" id="playBtn" type="button"></button>
+    <button class="icon-btn" id="restartBtn" type="button" aria-label="Recommencer depuis le début" title="Recommencer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+    </button>
+    <div class="status" aria-live="polite"><b id="statusTitle">Psaume 51</b><span id="statusLine">Prêt à écouter</span></div>
+    <button class="speed" id="speedBtn" type="button" title="Vitesse de lecture" aria-label="Vitesse de lecture : Normal">Normal</button>
+  </div>
+</div>
+
+<audio id="audio" preload="auto"></audio>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

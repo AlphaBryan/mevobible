@@ -1,0 +1,687 @@
+<title>Lecture du vendredi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Cormorant+Garamond:wght@600;700&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+<style>
+/* Layout: one reading column; the two Friday steps on top, a sticky player at the bottom like a hymnal stand. */
+:root {
+  --bg: #f1f3f7;
+  --surface: #ffffff;
+  --ink: #1b2131;
+  --muted: #5a6276;
+  --line: #d8dce6;
+  --accent: #2c3b88;
+  --accent-ink: #ffffff;
+  --accent-soft: #e4e8f7;
+  --mark: #fbe6a2;
+  --mark-ink: #1b2131;
+  --ok: #2c7a55;
+  --ok-soft: #e1f2e9;
+  --shadow: 0 1px 2px rgba(27, 33, 49, .06), 0 8px 24px rgba(27, 33, 49, .06);
+  --f-display: "Cormorant Garamond", "Garamond", "Times New Roman", serif;
+  --f-read: "Literata", "Georgia", "Times New Roman", serif;
+  --f-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --read-size: 1.3rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10131b; --surface: #191d29; --ink: #e7e9ef; --muted: #a2a8b9; --line: #2b3141;
+    --accent: #a3aff0; --accent-ink: #10131b; --accent-soft: #232a45;
+    --mark: #43391a; --mark-ink: #f7e9b8; --ok: #74cf9e; --ok-soft: #1a3328;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10131b; --surface: #191d29; --ink: #e7e9ef; --muted: #a2a8b9; --line: #2b3141;
+  --accent: #a3aff0; --accent-ink: #10131b; --accent-soft: #232a45;
+  --mark: #43391a; --mark-ink: #f7e9b8; --ok: #74cf9e; --ok-soft: #1a3328;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-ui); font-size: 1rem; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.app { max-width: 46rem; margin: 0 auto; padding-block: 1.75rem 9rem; display: flex; flex-direction: column; gap: 1.5rem; }
+button, select, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+/* Header */
+.top { display: flex; flex-direction: column; gap: .35rem; }
+.eyebrow { margin: 0; font-size: .82rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(2rem, 6vw, 2.8rem); line-height: 1.05; text-wrap: balance; }
+.journey { display: flex; flex-direction: column; gap: .4rem; margin-top: .5rem; }
+.journey-bar { height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.journey-bar span { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+.journey p { margin: 0; font-size: .88rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* Steps */
+.steps { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+@media (max-width: 520px) { .steps { grid-template-columns: 1fr; } }
+.step {
+  display: flex; align-items: center; gap: .85rem; text-align: left;
+  padding: .9rem 1rem; border-radius: 14px; border: 2px solid var(--line);
+  background: var(--surface); min-width: 0;
+}
+.step:hover { border-color: var(--accent); }
+.step[aria-current="step"] { border-color: var(--accent); background: var(--accent-soft); }
+.step .num {
+  flex: none; width: 2.2rem; height: 2.2rem; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 700;
+  background: var(--bg); color: var(--muted); border: 2px solid var(--line);
+}
+.step[aria-current="step"] .num { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.step.done .num { background: var(--ok); color: var(--surface); border-color: var(--ok); }
+.step .txt { display: flex; flex-direction: column; min-width: 0; }
+.step .lbl { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.step .ttl { font-family: var(--f-display); font-size: 1.5rem; font-weight: 700; line-height: 1.15; }
+
+/* Reader */
+.reader { background: var(--surface); border-radius: 18px; box-shadow: var(--shadow); padding-block: 1.75rem 1.5rem; padding-inline: clamp(1.1rem, 4vw, 2.5rem); display: flex; flex-direction: column; gap: 1.25rem; }
+.reader-head { display: flex; flex-direction: column; gap: .3rem; }
+h2 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(2.2rem, 7vw, 3rem); line-height: 1; }
+.meta { margin: 0; color: var(--muted); font-size: .9rem; }
+.yt { align-self: flex-start; margin-top: .35rem; display: inline-flex; align-items: center; gap: .45rem; color: var(--accent); font-weight: 700; font-size: .92rem; text-decoration: none; border-bottom: 1px solid currentColor; }
+.notice { margin: 0; padding: .8rem 1rem; border-radius: 10px; background: var(--accent-soft); color: var(--ink); font-size: .92rem; }
+
+.verses { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .15rem; font-family: var(--f-read); font-size: var(--read-size); line-height: 1.6; }
+.verse { display: grid; grid-template-columns: 2.1em 1fr; gap: .25em; padding: .3em .5em .3em .2em; border-radius: 10px; cursor: pointer; transition: background-color .25s; }
+.verse:hover { background: var(--bg); }
+.verse .vn { font-family: var(--f-ui); font-size: .62em; font-weight: 700; color: var(--accent); text-align: right; padding-top: .45em; font-variant-numeric: tabular-nums; }
+.verse .vt { white-space: pre-line; min-width: 0; }
+.verse.now { background: var(--mark); color: var(--mark-ink); }
+.verse.now .vn { color: var(--mark-ink); }
+.loading { color: var(--muted); font-family: var(--f-ui); font-size: 1rem; }
+
+/* End of passage */
+.finish { border-top: 1px solid var(--line); padding-top: 1.25rem; display: flex; flex-direction: column; gap: .75rem; align-items: flex-start; }
+.finish p { margin: 0; color: var(--muted); }
+.finish .big { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; color: var(--ink); line-height: 1.2; }
+.finish.is-done .big { color: var(--ok); }
+.row { display: flex; flex-wrap: wrap; gap: .6rem; }
+.btn { border: 2px solid transparent; border-radius: 999px; padding: .75rem 1.3rem; font-weight: 700; font-size: 1.02rem; display: inline-flex; align-items: center; gap: .5rem; }
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
+.btn-ghost { background: transparent; border-color: var(--line); color: var(--ink); }
+.btn-ghost:hover { border-color: var(--accent); }
+.btn-ok { background: var(--ok); color: var(--surface); }
+
+/* Settings */
+.settings { background: var(--surface); border-radius: 14px; border: 1px solid var(--line); }
+.settings summary { padding: .9rem 1.1rem; font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+.settings summary::-webkit-details-marker { display: none; }
+.settings summary::after { content: "+"; font-size: 1.3rem; color: var(--muted); }
+.settings[open] summary::after { content: "−"; }
+.set-body { padding: 0 1.1rem 1.2rem; display: flex; flex-direction: column; gap: 1.3rem; }
+.field { display: flex; flex-direction: column; gap: .45rem; min-width: 0; }
+.field > label, .field > .flabel { font-weight: 700; font-size: .92rem; }
+.field .hint { margin: 0; color: var(--muted); font-size: .85rem; }
+.inline { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+select, input[type="url"] { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: .6rem .7rem; min-width: 0; max-width: 100%; }
+input[type="url"] { flex: 1 1 16rem; }
+select.book { flex: 1 1 12rem; }
+.saved { color: var(--ok); font-size: .88rem; font-weight: 700; }
+
+.credit { color: var(--muted); font-size: .82rem; text-align: center; margin: 0; }
+
+/* Player */
+.player {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+  background: var(--surface); border-top: 1px solid var(--line);
+  box-shadow: 0 -6px 20px rgba(0,0,0,.06);
+  padding-bottom: calc(.75rem + env(safe-area-inset-bottom, 0px)); padding-top: .75rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.player-in { max-width: 46rem; margin: 0 auto; display: flex; align-items: center; gap: .75rem; }
+.play {
+  flex: none; display: inline-flex; align-items: center; gap: .55rem;
+  background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 999px;
+  padding: .85rem 1.5rem .85rem 1.2rem; font-weight: 700; font-size: 1.1rem;
+}
+.play svg { width: 1.4rem; height: 1.4rem; }
+.icon-btn { flex: none; width: 2.9rem; height: 2.9rem; border-radius: 50%; border: 2px solid var(--line); background: transparent; display: grid; place-items: center; }
+.icon-btn:hover { border-color: var(--accent); }
+.icon-btn svg { width: 1.25rem; height: 1.25rem; }
+.status { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.status b { font-size: .95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.status span { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.speed { flex: none; border: 2px solid var(--line); background: transparent; border-radius: 999px; padding: .5rem .85rem; font-weight: 700; font-size: .88rem; }
+.speed:hover { border-color: var(--accent); }
+@media (max-width: 460px) {
+  .status { display: none; }
+  .player-in { justify-content: space-between; }
+}
+
+@media (prefers-reduced-motion: reduce) { .verse { transition: none; } }
+</style>
+
+<div class="app">
+  <header class="top">
+    <p class="eyebrow" id="dateLine">Vendredi</p>
+    <h1>Étude biblique du vendredi</h1>
+    <div class="journey" aria-label="Progression dans la Bible">
+      <div class="journey-bar"><span id="journeyFill" style="width:10%"></span></div>
+      <p id="journeyText">De Genèse 1 à Apocalypse 22</p>
+    </div>
+  </header>
+
+  <nav class="steps" aria-label="Étapes">
+    <button class="step" id="step-psaume" type="button" aria-current="step">
+      <span class="num">1</span>
+      <span class="txt"><span class="lbl">Prière d’ouverture</span><span class="ttl">Psaume 51</span></span>
+    </button>
+    <button class="step" id="step-lecture" type="button">
+      <span class="num">2</span>
+      <span class="txt"><span class="lbl">Lecture du jour</span><span class="ttl" id="stepLectureTitle">…</span></span>
+    </button>
+  </nav>
+
+  <main class="reader" id="reader">
+    <div class="reader-head">
+      <h2 id="readTitle">Psaume 51</h2>
+      <p class="meta" id="readMeta">21 versets · Louis Segond 1910</p>
+      <a class="yt" id="ytLink" href="https://www.youtube.com/results?search_query=psaume+51" target="_blank" rel="noopener">Ouvrir une vidéo du Psaume 51 sur YouTube ↗</a>
+    </div>
+    <p class="notice" id="notice" hidden></p>
+    <ol class="verses" id="verses"></ol>
+    <section class="finish" id="finish"></section>
+  </main>
+
+  <details class="settings" id="settings">
+    <summary>Réglages</summary>
+    <div class="set-body">
+      <div class="field">
+        <span class="flabel">Passage du jour</span>
+        <p class="hint">Si vous avez sauté une semaine ou lu un chapitre de plus, ajustez ici.</p>
+        <div class="inline">
+          <select class="book" id="setBook" aria-label="Livre"></select>
+          <select id="setChap" aria-label="Chapitre"></select>
+          <button class="btn btn-ghost" id="setPassageBtn" type="button">Enregistrer</button>
+          <span class="saved" id="setPassageMsg" hidden>Enregistré</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="setYt">Votre vidéo YouTube du Psaume 51 (facultatif)</label>
+        <p class="hint">Collez le lien de la vidéo que vous écoutez d’habitude. Un bouton l’ouvrira à l’étape 1.</p>
+        <div class="inline">
+          <input type="url" id="setYt" placeholder="https://www.youtube.com/watch?v=…">
+          <button class="btn btn-ghost" id="setYtBtn" type="button">Enregistrer</button>
+          <span class="saved" id="setYtMsg" hidden>Enregistré</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="setVoice">Voix de lecture</label>
+        <select id="setVoice"></select>
+        <p class="hint" id="voiceHint">Les voix disponibles dépendent de l’appareil.</p>
+      </div>
+      <div class="field">
+        <span class="flabel">Taille du texte</span>
+        <div class="inline">
+          <button class="btn btn-ghost" id="sizeDown" type="button" aria-label="Texte plus petit">A−</button>
+          <button class="btn btn-ghost" id="sizeUp" type="button" aria-label="Texte plus grand">A+</button>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <p class="credit">Texte biblique : Louis Segond 1910 (domaine public). Lecture à voix haute par la voix de synthèse de votre appareil.</p>
+</div>
+
+<div class="player" id="player">
+  <div class="player-in">
+    <button class="play" id="playBtn" type="button"></button>
+    <button class="icon-btn" id="restartBtn" type="button" aria-label="Recommencer depuis le début" title="Recommencer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+    </button>
+    <div class="status"><b id="statusTitle">Psaume 51</b><span id="statusLine">Prêt à écouter</span></div>
+    <button class="speed" id="speedBtn" type="button" title="Vitesse de lecture">Normal</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  const LIVRES = [["Genèse",50],["Exode",40],["Lévitique",27],["Nombres",36],["Deutéronome",34],["Josué",24],["Juges",21],["Ruth",4],["1 Samuel",31],["2 Samuel",24],["1 Rois",22],["2 Rois",25],["1 Chroniques",29],["2 Chroniques",36],["Esdras",10],["Néhémie",13],["Esther",10],["Job",42],["Psaumes",150],["Proverbes",31],["Ecclésiaste",12],["Cantique des cantiques",8],["Ésaïe",66],["Jérémie",52],["Lamentations",5],["Ézéchiel",48],["Daniel",12],["Osée",14],["Joël",3],["Amos",9],["Abdias",1],["Jonas",4],["Michée",7],["Nahum",3],["Habacuc",3],["Sophonie",3],["Aggée",2],["Zacharie",14],["Malachie",4],["Matthieu",28],["Marc",16],["Luc",24],["Jean",21],["Actes",28],["Romains",16],["1 Corinthiens",16],["2 Corinthiens",13],["Galates",6],["Éphésiens",6],["Philippiens",4],["Colossiens",4],["1 Thessaloniciens",5],["2 Thessaloniciens",3],["1 Timothée",6],["2 Timothée",4],["Tite",3],["Philémon",1],["Hébreux",13],["Jacques",5],["1 Pierre",5],["2 Pierre",3],["1 Jean",5],["2 Jean",1],["3 Jean",1],["Jude",1],["Apocalypse",22]];
+  const PSAUME_51 = ["Au chef des chantres. Psaume de David.", "Lorsque Nathan, le prophète, vint à lui, après que David fut allé vers Bath-Schéba.", "O Dieu! Aie pitié de moi dans ta bonté;\nSelon ta grande miséricorde, efface mes transgressions;", "Lave-moi complètement de mon iniquité,\nEt purifie-moi de mon péché.", "Car je reconnais mes transgressions,\nEt mon péché est constamment devant moi.", "J’ai péché contre toi seul,\nEt j’ai fait ce qui est mal à tes yeux,\nEn sorte que tu seras juste dans ta sentence,\nSans reproche dans ton jugement.", "Voici, je suis né dans l’iniquité,\nEt ma mère m’a conçu dans le péché.", "Mais tu veux que la vérité soit au fond du cœur:\nFais donc pénétrer la sagesse au-dedans de moi!", "Purifie-moi avec l’hysope, et je serai pur;\nLave-moi, et je serai plus blanc que la neige.", "Annonce-moi l’allégresse et la joie,\nEt les os que tu as brisés se réjouiront.", "Détourne ton regard de mes péchés,\nEfface toutes mes iniquités.", "O Dieu! Crée en moi un cœur pur,\nRenouvelle en moi un esprit bien disposé.", "Ne me rejette pas loin de ta face,\nNe me retire pas ton esprit saint.", "Rends-moi la joie de ton salut,\nEt qu’un esprit de bonne volonté me soutienne!", "J’enseignerai tes voies à ceux qui les transgressent,\nEt les pécheurs reviendront à toi.", "O Dieu, Dieu de mon salut! Délivre-moi du sang versé,\nEt ma langue célébrera ta miséricorde.", "Seigneur! Ouvre mes lèvres,\nEt ma bouche publiera ta louange.", "Si tu eusses voulu des sacrifices, je t’en aurais offert;\nMais tu ne prends point plaisir aux holocaustes.", "Les sacrifices qui sont agréables à Dieu, c’est un esprit brisé:\nO Dieu! Tu ne dédaignes pas un cœur brisé et contrit.", "Répands par ta grâce tes bienfaits sur Sion,\nBâtis les murs de Jérusalem!", "Alors tu agréeras des sacrifices de justice,\nDes holocaustes et des victimes tout entières;\nAlors on offrira des taureaux sur ton autel."];
+  const TOTAL = LIVRES.reduce((s, b) => s + b[1], 0);
+  const DEFAUT = { livre: 3, chapitre: 25, termineLe: null, precedent: null, youtube: "", majLe: "1970-01-01T00:00:00.000Z" };
+  const VITESSES = [{ r: 0.8, t: "Lent" }, { r: 0.95, t: "Normal" }, { r: 1.12, t: "Rapide" }];
+
+  const $ = (id) => document.getElementById(id);
+  const synth = ("speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined") ? window.speechSynthesis : null;
+
+  /* ---------- storage ---------- */
+  function lsGet(k) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+  function valide(s) {
+    if (!s || typeof s !== "object") return null;
+    const l = Number(s.livre), c = Number(s.chapitre);
+    if (!Number.isInteger(l) || l < 1 || l > 66) return null;
+    if (!Number.isInteger(c) || c < 1 || c > LIVRES[l - 1][1]) return null;
+    let prec = null;
+    if (s.precedent && typeof s.precedent === "object") {
+      const pl = Number(s.precedent.livre), pc = Number(s.precedent.chapitre);
+      if (Number.isInteger(pl) && pl >= 1 && pl <= 66 && Number.isInteger(pc) && pc >= 1 && pc <= LIVRES[pl - 1][1]) prec = { livre: pl, chapitre: pc };
+    }
+    const yt = typeof s.youtube === "string" && /^https:\/\/[^\s"<>]+$/.test(s.youtube) ? s.youtube.slice(0, 400) : "";
+    const termine = typeof s.termineLe === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s.termineLe) ? s.termineLe : null;
+    const maj = typeof s.majLe === "string" && !isNaN(Date.parse(s.majLe)) ? s.majLe : DEFAUT.majLe;
+    return { livre: l, chapitre: c, termineLe: termine, precedent: prec, youtube: yt, majLe: maj };
+  }
+
+  let etat = valide(lsGet("lv.etat")) || { ...DEFAUT };
+  const prefs = Object.assign({ voix: "", vitesse: 1, taille: 1.3 }, lsGet("lv.prefs") || {});
+  function savePrefs() { lsSet("lv.prefs", prefs); }
+
+  /* ---------- shared progress (db when available) ---------- */
+  let dbRef = null, dbWritable = true;
+  (async function initDb() {
+    let db = null;
+    try { db = window.claude && window.claude.use ? await window.claude.use("db") : null; } catch (e) { db = null; }
+    if (!db) return;
+    try { dbRef = db.doc("famille/progression"); } catch (e) { return; }
+    dbRef.onSnapshot((snap) => {
+      if (!snap.exists) return;
+      const r = valide(snap.data());
+      if (!r || Date.parse(r.majLe) <= Date.parse(etat.majLe)) return;
+      const avant = cleJour();
+      etat = r; lsSet("lv.etat", etat);
+      if (cleJour() !== avant && etape === "lecture" && !tts.playing) { resetLecture(); }
+      renderTout();
+    }, () => {});
+  })();
+
+  function enregistrer(nouvel) {
+    nouvel.majLe = new Date().toISOString();
+    etat = nouvel; lsSet("lv.etat", etat);
+    if (dbRef && dbWritable) {
+      dbRef.set({ ...etat }).catch((e) => { if (e && (e.code === "invalid_argument" || e.code === "not_granted" || e.code === "revoked")) dbWritable = false; });
+    }
+  }
+
+  /* ---------- passage logic ---------- */
+  const aujourdhui = () => new Date().toLocaleDateString("en-CA");
+  const nom = (l, c) => LIVRES[l - 1][0] + " " + c;
+  function suivant(l, c) {
+    if (c < LIVRES[l - 1][1]) return { livre: l, chapitre: c + 1 };
+    if (l < 66) return { livre: l + 1, chapitre: 1 };
+    return { livre: 1, chapitre: 1 };
+  }
+  function passageDuJour() {
+    if (etat.termineLe === aujourdhui() && etat.precedent) return { ...etat.precedent, fait: true };
+    return { livre: etat.livre, chapitre: etat.chapitre, fait: false };
+  }
+  function cleJour() { const p = passageDuJour(); return p.livre + ":" + p.chapitre; }
+  function rang(l, c) { let n = 0; for (let i = 0; i < l - 1; i++) n += LIVRES[i][1]; return n + c; }
+
+  const cache = {};
+  function chargerLivre(l) {
+    if (!cache[l]) {
+      cache[l] = fetch("livres/" + String(l).padStart(2, "0") + ".json")
+        .then((r) => { if (!r.ok) throw new Error("http " + r.status); return r.json(); })
+        .catch((e) => { delete cache[l]; throw e; });
+    }
+    return cache[l];
+  }
+
+  /* ---------- view state ---------- */
+  let etape = "psaume";
+  let psaumeFini = false;
+  let versets = PSAUME_51;
+  let lectureCle = null, lectureVersets = null, lectureErreur = false;
+
+  function resetLecture() { lectureCle = null; lectureVersets = null; lectureErreur = false; }
+
+  function preparerLecture() {
+    const p = passageDuJour(), cle = p.livre + ":" + p.chapitre;
+    if (lectureCle === cle && (lectureVersets || !lectureErreur)) return;
+    lectureCle = cle; lectureVersets = null; lectureErreur = false;
+    chargerLivre(p.livre).then((d) => {
+      if (lectureCle !== cle) return;
+      lectureVersets = d.chapitres[p.chapitre - 1] || [];
+      if (etape === "lecture") { versets = lectureVersets; renderLecteur(); }
+    }).catch(() => {
+      if (lectureCle !== cle) return;
+      lectureErreur = true;
+      if (etape === "lecture") renderLecteur();
+    });
+  }
+
+  /* ---------- speech ---------- */
+  const tts = { playing: false, idx: 0, started: false, token: 0, current: -1, startedAt: 0, stuck: 0 };
+  let voix = [];
+  let wakeLock = null;
+
+  function chargerVoix() {
+    if (!synth) return;
+    const toutes = synth.getVoices() || [];
+    const fr = toutes.filter((v) => (v.lang || "").toLowerCase().replace("_", "-").startsWith("fr"));
+    const score = (v) => {
+      let s = 0; const lang = (v.lang || "").toLowerCase();
+      if (lang.includes("ca")) s += 3;
+      if (/natural|premium|enhanced|neural|google|amélior/i.test(v.name)) s += 2;
+      if (v.localService) s += 1;
+      return s;
+    };
+    voix = fr.sort((a, b) => score(b) - score(a));
+    renderVoix(toutes.length > 0);
+  }
+  function voixChoisie() {
+    if (!voix.length) return null;
+    return voix.find((v) => v.voiceURI === prefs.voix) || voix[0];
+  }
+  function textePourVoix(t) { return t.replace(/\n/g, " ").replace(/\s+/g, " ").trim(); }
+  function titreParle() {
+    if (etape === "psaume") return "Psaume 51.";
+    const p = passageDuJour();
+    return LIVRES[p.livre - 1][0] + ", chapitre " + p.chapitre + ".";
+  }
+
+  function parler(i) {
+    if (!synth) return;
+    const tok = ++tts.token;
+    if (synth.speaking || synth.pending) synth.cancel();
+    if (i >= versets.length) { finLecture(); return; }
+    const u = new SpeechSynthesisUtterance(i < 0 ? titreParle() : textePourVoix(versets[i]));
+    const v = voixChoisie();
+    if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = "fr-CA"; }
+    u.rate = VITESSES[prefs.vitesse].r;
+    u.onend = () => suite(tok, i);
+    u.onerror = (e) => { if (e && (e.error === "interrupted" || e.error === "canceled")) return; suite(tok, i); };
+    tts.current = i; tts.idx = Math.max(0, i); tts.startedAt = Date.now(); tts.stuck = 0;
+    surligner(i, true);
+    try { synth.resume(); } catch (e) {}
+    synth.speak(u);
+    renderPlayer();
+  }
+  function suite(tok, i) {
+    if (tok !== tts.token || !tts.playing) return;
+    parler(i + 1);
+  }
+  setInterval(() => {
+    if (!synth || !tts.playing) return;
+    if (synth.speaking || synth.pending) { tts.stuck = 0; return; }
+    if (Date.now() - tts.startedAt < 1500) return;
+    if (++tts.stuck >= 2) suite(tts.token, tts.current);
+  }, 1000);
+
+  function jouer() {
+    if (!synth || !versets) return;
+    tts.playing = true;
+    demanderEveil();
+    const depart = tts.started ? tts.idx : -1;
+    tts.started = true;
+    parler(depart);
+  }
+  function pause() {
+    tts.playing = false; tts.token++;
+    if (synth) synth.cancel();
+    libererEveil();
+    renderPlayer();
+  }
+  function arreterTout() { pause(); tts.idx = 0; tts.started = false; tts.current = -1; }
+  function finLecture() {
+    tts.playing = false; tts.started = false; tts.idx = 0; tts.current = -1;
+    libererEveil();
+    surligner(-2, false);
+    if (etape === "psaume") psaumeFini = true;
+    renderEtapes(); renderFin(); renderPlayer();
+    const fin = $("finish");
+    fin.scrollIntoView({ behavior: reduit() ? "auto" : "smooth", block: "center" });
+    const b = fin.querySelector("button");
+    if (b) b.focus({ preventScroll: true });
+  }
+
+  function demanderEveil() {
+    try {
+      if (navigator.wakeLock && !wakeLock) navigator.wakeLock.request("screen").then((w) => { wakeLock = w; w.addEventListener("release", () => { wakeLock = null; }); }).catch(() => {});
+    } catch (e) {}
+  }
+  function libererEveil() { try { if (wakeLock) wakeLock.release(); } catch (e) {} wakeLock = null; }
+  const reduit = () => window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function surligner(i, defiler) {
+    const items = $("verses").children;
+    for (let k = 0; k < items.length; k++) items[k].classList.toggle("now", k === i);
+    if (defiler && i >= 0 && items[i]) items[i].scrollIntoView({ behavior: reduit() ? "auto" : "smooth", block: "center" });
+  }
+
+  /* ---------- rendering ---------- */
+  function renderEntete() {
+    const d = new Date();
+    const fmt = (x) => x.toLocaleDateString("fr-CA", { weekday: "long", day: "numeric", month: "long" });
+    if (d.getDay() === 5) $("dateLine").textContent = "Aujourd’hui, " + fmt(d);
+    else { const v = new Date(d); v.setDate(d.getDate() + ((5 - d.getDay() + 7) % 7)); $("dateLine").textContent = "Prochaine étude : " + fmt(v); }
+    const p = passageDuJour();
+    const lus = rang(p.livre, p.chapitre) - (p.fait ? 0 : 1);
+    $("journeyFill").style.width = Math.max(1, (lus / TOTAL) * 100).toFixed(1) + "%";
+    $("journeyText").textContent = lus.toLocaleString("fr-CA") + " chapitres lus sur " + TOTAL.toLocaleString("fr-CA") + " depuis Genèse 1 · " + Math.round((lus / TOTAL) * 100) + " %";
+  }
+
+  function renderEtapes() {
+    const p = passageDuJour();
+    $("stepLectureTitle").textContent = nom(p.livre, p.chapitre);
+    const s1 = $("step-psaume"), s2 = $("step-lecture");
+    s1.toggleAttribute("aria-current", etape === "psaume"); if (etape === "psaume") s1.setAttribute("aria-current", "step");
+    s2.toggleAttribute("aria-current", etape === "lecture"); if (etape === "lecture") s2.setAttribute("aria-current", "step");
+    s1.classList.toggle("done", psaumeFini);
+    s2.classList.toggle("done", p.fait);
+    s1.querySelector(".num").textContent = psaumeFini ? "✓" : "1";
+    s2.querySelector(".num").textContent = p.fait ? "✓" : "2";
+  }
+
+  function renderLecteur() {
+    const ol = $("verses"); ol.textContent = "";
+    const yt = $("ytLink");
+    if (etape === "psaume") {
+      versets = PSAUME_51;
+      $("readTitle").textContent = "Psaume 51";
+      $("readMeta").textContent = "21 versets · Louis Segond 1910";
+      yt.hidden = false;
+      if (etat.youtube) { yt.href = etat.youtube; yt.textContent = "Ouvrir notre vidéo YouTube ↗"; }
+      else { yt.href = "https://www.youtube.com/results?search_query=psaume+51"; yt.textContent = "Ouvrir une vidéo du Psaume 51 sur YouTube ↗"; }
+    } else {
+      const p = passageDuJour();
+      yt.hidden = true;
+      $("readTitle").textContent = nom(p.livre, p.chapitre);
+      versets = lectureVersets;
+      if (!versets) {
+        $("readMeta").textContent = "Louis Segond 1910";
+        const li = document.createElement("li"); li.className = "loading";
+        li.textContent = lectureErreur ? "Le chapitre n’a pas pu se charger. Vérifiez la connexion Internet, puis touchez l’étape 2 pour réessayer." : "Chargement du chapitre…";
+        ol.appendChild(li);
+        renderPlayer(); renderFin();
+        return;
+      }
+      $("readMeta").textContent = versets.length + " versets · Louis Segond 1910";
+    }
+    versets.forEach((t, i) => {
+      const li = document.createElement("li"); li.className = "verse"; li.tabIndex = 0;
+      li.setAttribute("aria-label", "Verset " + (i + 1));
+      const n = document.createElement("span"); n.className = "vn"; n.textContent = i + 1;
+      const v = document.createElement("span"); v.className = "vt"; v.textContent = t;
+      li.append(n, v);
+      li.addEventListener("click", () => allerA(i));
+      li.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); allerA(i); } });
+      ol.appendChild(li);
+    });
+    if (tts.current >= 0) surligner(tts.current, false);
+    renderFin(); renderPlayer();
+  }
+
+  function allerA(i) {
+    tts.idx = i; tts.started = true;
+    if (tts.playing) parler(i);
+    else { tts.current = i; surligner(i, false); renderPlayer(); }
+  }
+
+  function bouton(cls, texte, fn) {
+    const b = document.createElement("button"); b.type = "button"; b.className = "btn " + cls; b.textContent = texte;
+    b.addEventListener("click", fn); return b;
+  }
+  function para(cls, texte) { const p = document.createElement("p"); if (cls) p.className = cls; p.textContent = texte; return p; }
+
+  function renderFin() {
+    const f = $("finish"); f.textContent = ""; f.className = "finish";
+    if (etape === "psaume") {
+      const p = passageDuJour();
+      f.append(para("big", psaumeFini ? "Fin du psaume." : "Après le psaume"));
+      const r = document.createElement("div"); r.className = "row";
+      r.append(bouton("btn-primary", "Continuer : " + nom(p.livre, p.chapitre) + " →", () => allerEtape("lecture", true)));
+      f.append(r);
+      return;
+    }
+    const p = passageDuJour();
+    if (!lectureVersets && !p.fait) { f.hidden = true; return; }
+    f.hidden = false;
+    if (p.fait) {
+      const n = { livre: etat.livre, chapitre: etat.chapitre };
+      f.classList.add("is-done");
+      f.append(para("big", "✓ " + nom(p.livre, p.chapitre) + " est lu."));
+      f.append(para("", "Vendredi prochain, l’application ouvrira " + nom(n.livre, n.chapitre) + "."));
+      const r = document.createElement("div"); r.className = "row";
+      r.append(bouton("btn-ghost", "Annuler", annulerFait));
+      f.append(r);
+    } else {
+      const n = suivant(p.livre, p.chapitre);
+      f.append(para("big", "Fin de la lecture"));
+      f.append(para("", "Quand vous avez terminé, marquez le chapitre comme lu. Vendredi prochain, ce sera " + nom(n.livre, n.chapitre) + "."));
+      const r = document.createElement("div"); r.className = "row";
+      r.append(bouton("btn-ok", "Marquer " + nom(p.livre, p.chapitre) + " comme lu", marquerFait));
+      f.append(r);
+    }
+  }
+
+  function marquerFait() {
+    const p = passageDuJour(); if (p.fait) return;
+    const n = suivant(p.livre, p.chapitre);
+    enregistrer({ ...etat, livre: n.livre, chapitre: n.chapitre, termineLe: aujourdhui(), precedent: { livre: p.livre, chapitre: p.chapitre } });
+    renderTout();
+  }
+  function annulerFait() {
+    if (!etat.precedent) return;
+    enregistrer({ ...etat, livre: etat.precedent.livre, chapitre: etat.precedent.chapitre, termineLe: null, precedent: null });
+    renderTout();
+  }
+
+  const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>';
+  const ICON_PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="5.5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14" y="4" width="4.5" height="16" rx="1.2"/></svg>';
+
+  function renderPlayer() {
+    const btn = $("playBtn");
+    if (!synth) { $("player").hidden = true; return; }
+    const pret = !!versets;
+    btn.disabled = !pret; $("restartBtn").disabled = !pret;
+    if (tts.playing) { btn.innerHTML = ICON_PAUSE + "<span>Pause</span>"; btn.setAttribute("aria-label", "Mettre en pause"); }
+    else { btn.innerHTML = ICON_PLAY + "<span>" + (tts.started ? "Reprendre" : "Écouter") + "</span>"; btn.setAttribute("aria-label", tts.started ? "Reprendre la lecture" : "Écouter le texte"); }
+    $("statusTitle").textContent = etape === "psaume" ? "Psaume 51" : nom(passageDuJour().livre, passageDuJour().chapitre);
+    let ligne = "Prêt à écouter";
+    if (!pret) ligne = "Chargement…";
+    else if (tts.playing && tts.current < 0) ligne = "Annonce du passage";
+    else if (tts.started || tts.current >= 0) ligne = "Verset " + (Math.max(0, tts.current) + 1) + " sur " + versets.length;
+    $("statusLine").textContent = ligne;
+    $("speedBtn").textContent = VITESSES[prefs.vitesse].t;
+  }
+
+  function renderVoix(listeChargee) {
+    const sel = $("setVoice"); sel.textContent = "";
+    if (!voix.length) {
+      const o = document.createElement("option"); o.textContent = listeChargee ? "Aucune voix française trouvée" : "Voix par défaut"; sel.appendChild(o); sel.disabled = true;
+      if (listeChargee) montrerAvis("Aucune voix française n’a été trouvée sur cet appareil. La lecture se fera avec la voix par défaut, ou lisez à tour de rôle en touchant chaque verset.");
+      return;
+    }
+    sel.disabled = false;
+    voix.forEach((v) => { const o = document.createElement("option"); o.value = v.voiceURI; o.textContent = v.name + " (" + v.lang + ")"; sel.appendChild(o); });
+    const c = voixChoisie(); if (c) sel.value = c.voiceURI;
+  }
+  function montrerAvis(t) { const n = $("notice"); n.textContent = t; n.hidden = false; }
+
+  function renderReglages() {
+    const sb = $("setBook");
+    if (!sb.options.length) LIVRES.forEach((b, i) => { const o = document.createElement("option"); o.value = i + 1; o.textContent = b[0]; sb.appendChild(o); });
+    const p = passageDuJour();
+    const cible = p.fait ? { livre: etat.livre, chapitre: etat.chapitre } : p;
+    sb.value = cible.livre; remplirChapitres(cible.livre); $("setChap").value = cible.chapitre;
+    if (document.activeElement !== $("setYt")) $("setYt").value = etat.youtube || "";
+  }
+  function remplirChapitres(l) {
+    const sc = $("setChap"); sc.textContent = "";
+    for (let c = 1; c <= LIVRES[l - 1][1]; c++) { const o = document.createElement("option"); o.value = c; o.textContent = "Chapitre " + c; sc.appendChild(o); }
+  }
+
+  function renderTout() {
+    renderEntete(); renderEtapes(); renderReglages();
+    if (etape === "lecture") { preparerLecture(); if (!tts.playing) renderLecteur(); else renderFin(); }
+    else renderFin();
+    renderPlayer();
+  }
+
+  function allerEtape(e, lancer) {
+    arreterTout();
+    etape = e;
+    if (e === "lecture") preparerLecture();
+    renderEtapes(); renderLecteur();
+    window.scrollTo({ top: 0, behavior: reduit() ? "auto" : "smooth" });
+    if (lancer && versets) jouer();
+  }
+
+  /* ---------- events ---------- */
+  $("step-psaume").addEventListener("click", () => allerEtape("psaume", false));
+  $("step-lecture").addEventListener("click", () => { if (lectureErreur) resetLecture(); allerEtape("lecture", false); });
+  $("playBtn").addEventListener("click", () => { tts.playing ? pause() : jouer(); });
+  $("restartBtn").addEventListener("click", () => { arreterTout(); surligner(-2, false); jouer(); });
+  $("speedBtn").addEventListener("click", () => {
+    prefs.vitesse = (prefs.vitesse + 1) % VITESSES.length; savePrefs(); renderPlayer();
+    if (tts.playing) parler(tts.current);
+  });
+  $("setVoice").addEventListener("change", (e) => { prefs.voix = e.target.value; savePrefs(); if (tts.playing) parler(tts.current); });
+  $("sizeUp").addEventListener("click", () => { prefs.taille = Math.min(2, +(prefs.taille + 0.1).toFixed(2)); appliquerTaille(); });
+  $("sizeDown").addEventListener("click", () => { prefs.taille = Math.max(1, +(prefs.taille - 0.1).toFixed(2)); appliquerTaille(); });
+  function appliquerTaille() { document.documentElement.style.setProperty("--read-size", prefs.taille + "rem"); savePrefs(); }
+
+  $("setBook").addEventListener("change", (e) => remplirChapitres(+e.target.value));
+  $("setPassageBtn").addEventListener("click", () => {
+    const l = +$("setBook").value, c = +$("setChap").value;
+    enregistrer({ ...etat, livre: l, chapitre: c, termineLe: null, precedent: null });
+    if (etape === "lecture") { arreterTout(); }
+    resetLecture(); renderTout();
+    flash("setPassageMsg");
+  });
+  $("setYtBtn").addEventListener("click", () => {
+    const v = $("setYt").value.trim();
+    if (v && !/^https:\/\/[^\s"<>]+$/.test(v)) { $("setYtMsg").textContent = "Le lien doit commencer par https://"; flash("setYtMsg"); return; }
+    $("setYtMsg").textContent = "Enregistré";
+    enregistrer({ ...etat, youtube: v.slice(0, 400) });
+    if (etape === "psaume") renderLecteur();
+    flash("setYtMsg");
+  });
+  function flash(id) { const el = $(id); el.hidden = false; clearTimeout(el._t); el._t = setTimeout(() => { el.hidden = true; }, 2500); }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.code !== "Space" || !synth) return;
+    const t = e.target; if (t && (t.tagName === "INPUT" || t.tagName === "SELECT" || t.tagName === "BUTTON" || t.tagName === "SUMMARY")) return;
+    e.preventDefault(); tts.playing ? pause() : jouer();
+  });
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && tts.playing) demanderEveil(); });
+
+  /* ---------- start ---------- */
+  appliquerTaille();
+  if (!synth) montrerAvis("La lecture à voix haute n’est pas disponible dans ce navigateur. Lisez à tour de rôle : touchez un verset pour le surligner.");
+  else {
+    chargerVoix();
+    if (typeof synth.addEventListener === "function") synth.addEventListener("voiceschanged", chargerVoix);
+    else synth.onvoiceschanged = chargerVoix;
+  }
+  preparerLecture();
+  renderTout();
+  renderLecteur();
+})();
+</script>

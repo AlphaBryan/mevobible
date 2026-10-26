@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#2c3b88"/>
+  <!-- Livre ouvert : deux pages courbées et une reliure -->
+  <path d="M256 168c-38-30-92-40-150-34v222c58-6 112 4 150 34z" fill="#ffffff"/>
+  <path d="M256 168c38-30 92-40 150-34v222c-58-6-112 4-150 34z" fill="#e4e8f7"/>
+  <path d="M256 168v222" stroke="#2c3b88" stroke-width="8" stroke-linecap="round"/>
+  <g stroke="#a3aff0" stroke-width="10" stroke-linecap="round" fill="none">
+    <path d="M138 196c32-3 61 3 88 16"/><path d="M138 236c32-3 61 3 88 16"/><path d="M138 276c32-3 61 3 88 16"/>
+    <path d="M374 196c-32-3-61 3-88 16"/><path d="M374 236c-32-3-61 3-88 16"/><path d="M374 276c-32-3-61 3-88 16"/>
+  </g>
+  <path d="M106 356c58-6 112 4 150 34 38-30 92-40 150-34v18c-58-6-112 4-150 34-38-30-92-40-150-34z" fill="#fbe6a2"/>
+</svg>
